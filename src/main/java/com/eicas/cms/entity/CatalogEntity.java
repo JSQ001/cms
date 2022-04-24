@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.time.LocalDateTime;
 import java.io.Serializable;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -34,11 +33,8 @@ public class CatalogEntity implements Serializable {
     @ApiModelProperty(value = "所属父栏目id")
     private Long parentId;
 
-    @ApiModelProperty(value = "栏目层级关系")
-    private String treeRel;
-
-    @ApiModelProperty(value = "栏目编码")
-    private String code;
+    @ApiModelProperty(value = "栏目编码，层级关系")
+    private String encode;
 
     @ApiModelProperty(value = "栏目名称")
     private String catalogName;
@@ -89,7 +85,4 @@ public class CatalogEntity implements Serializable {
     @TableLogic
     @TableField("is_deleted")
     private Boolean deleted;
-
-    @TableField(exist = false)
-    private List<CatalogEntity> children;
 }

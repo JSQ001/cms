@@ -7,7 +7,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-@MapperScan({"com.eicas.cms.mapper","com.eicas.crawler.mapper"})
+@MapperScan({"com.eicas.cms.mapper",
+        "com.eicas.crawler.mapper",
+        "com.eicas.security.mapper"})
 public class MainApplication {
 
     public static void main(String[] args) {

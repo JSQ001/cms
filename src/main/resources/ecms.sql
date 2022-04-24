@@ -1,3 +1,74 @@
+DROP TABLE IF EXISTS `sys_account`;
+CREATE TABLE `sys_account`
+(
+    `id`                         bigint(20) UNSIGNED NOT NULL,
+    `user_id`                    bigint(20) UNSIGNED NOT NULL,
+    `password`                   varchar(64)         NULL     DEFAULT NULL COMMENT '用户密码',
+    `is_enabled`                 tinyint(1)          NULL     DEFAULT 1 COMMENT '账号是否可用。默认为1（可用）',
+    `is_not_expired`             tinyint(1)          NULL     DEFAULT 1 COMMENT '是否过期。默认为1（没有过期）',
+    `is_account_not_locked`      tinyint(1)          NULL     DEFAULT 1 COMMENT '账号是否锁定。默认为1（没有锁定）',
+    `is_credentials_not_expired` tinyint(1)          NULL     DEFAULT 1 COMMENT '证书（密码）是否过期。默认为1（没有过期）',
+    `is_deleted`                 tinyint(1)          NOT NULL default '0' COMMENT '逻辑删除',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB COMMENT = '系统账号表';
+
+DROP TABLE IF EXISTS `sys_account_role_r`;
+CREATE TABLE `sys_account_role_r`
+(
+    `id`         bigint(20) UNSIGNED NOT NULL,
+    `account_id` bigint(20) UNSIGNED NOT NULL COMMENT '账号id',
+    `role_id`    bigint(20) UNSIGNED NOT NULL COMMENT '角色id',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB COMMENT = '账号角色关联表';
+
+
+DROP TABLE IF EXISTS `sys_permit`;
+CREATE TABLE `sys_permit`
+(
+    `id`   bigint(20) UNSIGNED NOT NULL,
+    `code` varchar(32)         NULL DEFAULT NULL COMMENT '权限code',
+    `name` varchar(32)         NULL DEFAULT NULL COMMENT '权限名',
+    `url`         varchar(128)        NOT NULL COMMENT '请求路径',
+    `description` varchar(128)        NULL DEFAULT NULL COMMENT '路径描述',
+    PRIMARY KEY (`id`) USING BTREE
+) COMMENT = '权限表';
+
+
+
+DROP TABLE IF EXISTS `sys_request_path`;
+CREATE TABLE `sys_request_path`
+(
+    `id`          bigint(20) UNSIGNED NOT NULL,
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB COMMENT = '请求路径';
+
+DROP TABLE IF EXISTS `sys_request_path_permit_r`;
+CREATE TABLE `sys_request_path_permit_r`
+(
+    `id`        bigint(20) UNSIGNED NOT NULL,
+    `url_id`    bigint(20) UNSIGNED NOT NULL COMMENT '请求路径id',
+    `permit_id` bigint(20) UNSIGNED NOT NULL COMMENT '权限id',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB COMMENT = '路径权限关联表';
+
+DROP TABLE IF EXISTS `sys_role`;
+CREATE TABLE `sys_role`
+(
+    `id`          bigint(20) UNSIGNED NOT NULL,
+    `name`        varchar(32)         NULL DEFAULT NULL COMMENT '角色名',
+    `description` varchar(64)         NULL DEFAULT NULL COMMENT '角色说明',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB COMMENT = '角色表';
+
+DROP TABLE IF EXISTS `sys_role_permit_r`;
+CREATE TABLE `sys_role_permit_r`
+(
+    `id`        bigint(20) UNSIGNED NOT NULL,
+    `role_id`   bigint(20) UNSIGNED NOT NULL COMMENT '角色id',
+    `permit_id` bigint(20) UNSIGNED NOT NULL COMMENT '权限id',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB COMMENT = '角色-权限关联表';
+
 DROP TABLE IF EXISTS cms_attachment;
 CREATE TABLE cms_attachment
 (

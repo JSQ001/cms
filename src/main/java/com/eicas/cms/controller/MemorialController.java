@@ -36,10 +36,10 @@ public class MemorialController {
      * 查询大事记条目
      */
     @PostMapping(value = "/list")
-    public Page<MemorialEntity> listMemorial(MemorialQueryParam param,
+    public Page<MemorialEntity> listMemorial(@Valid @RequestBody MemorialQueryParam param,
                                              @RequestParam(value = "current", defaultValue = "1") Integer current,
                                              @RequestParam(value = "size", defaultValue = "10") Integer size) {
-        return memorialService.listMemorial(param,current,size);
+        return memorialService.listMemorial(param, current, size);
     }
 
     @PostMapping(value = "/create")
@@ -53,12 +53,13 @@ public class MemorialController {
     }
 
     @PostMapping("/delete")
-    public Boolean batchDelete(@RequestParam("ids") List<Long> ids) {
+    public Boolean batchDelete(@RequestBody List<Long> ids) {
         return memorialService.removeBatchByIds(ids);
     }
 
     /**
      * 更新大事记条目
+     *
      * @param entity 大事记对象
      * @return 是否更新成功
      */

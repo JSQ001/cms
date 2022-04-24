@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @since 2022-04-20
  */
 @RestController
-@RequestMapping("/api/attachment")
+@RequestMapping("/attachment")
 public class AttachmentController {
     @Resource
     IAttachmentService attachmentService;

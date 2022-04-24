@@ -6,9 +6,7 @@ import com.eicas.cms.entity.NoticeEntity;
 import com.eicas.cms.pojo.param.NoticeQueryParam;
 
 /**
- * <p>
  * 通知公告服务接口
- * </p>
  *
  * @author osnudt
  * @since 2022-04-18

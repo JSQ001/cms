@@ -1,17 +1,14 @@
 package com.eicas.cms.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-
-import java.time.LocalDateTime;
-import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 文章信息表
@@ -23,7 +20,7 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("cms_article")
-@ApiModel(value="Article对象", description="文章信息表")
+@ApiModel(value = "Article对象", description = "文章信息表")
 public class ArticleEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,7 +29,6 @@ public class ArticleEntity implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "所属栏目id")
-    @NotNull(message = "栏目id不能为空")
     private Long catalogId;
 
     @ApiModelProperty(value = "栏目层级关系")

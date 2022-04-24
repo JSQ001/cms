@@ -1,16 +1,14 @@
 package com.eicas.cms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.eicas.cms.entity.ArticleEntity;
 import com.eicas.cms.entity.CatalogEntity;
 import com.eicas.cms.mapper.ArticleMapper;
-import com.eicas.cms.pojo.param.ArticleAuditParam;
 import com.eicas.cms.pojo.param.ArticleQueryParam;
-import com.eicas.cms.pojo.param.ArticleStaticsResult;
+import com.eicas.cms.pojo.vo.ArticleStatisticCompileVO;
 import com.eicas.cms.pojo.vo.ArticleStatisticVisitVO;
 import com.eicas.cms.service.IArticleService;
 import com.eicas.cms.service.ICatalogService;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
 
 /**
  * 文章信息服务实现类
@@ -38,6 +35,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
     @Override
     public ResultData<ArticleEntity> saveArticle(ArticleEntity entity) {
         Long catalogId = entity.getCatalogId();
+        if (catalogId == null) {
+            return ResultData.failed("没有指定文章所属栏目！");
+        }
 
         CatalogEntity catalogEntity = catalogService.getById(catalogId);
         if (catalogEntity == null) {
@@ -63,7 +63,17 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
 
     @Override
     public Page<ArticleEntity> listArticle(ArticleQueryParam param, Integer current, Integer size) {
-        return articleMapper.listArticle(param, Page.of(current,size));
+        return articleMapper.selectPage(Page.of(current, size),
+                Wrappers.<ArticleEntity>lambdaQuery()
+                        .eq(param.getCatalogId() != null, ArticleEntity::getCatalogId, param.getCatalogId())
+                        .ge(param.getBeginPublishTime() != null, ArticleEntity::getPublishTime, param.getBeginPublishTime())
+                        .le(param.getEndPublishTime() != null, ArticleEntity::getPublishTime, param.getEndPublishTime())
+                        .like(StringUtils.hasText(param.getTitle()), ArticleEntity::getTitle, param.getTitle())
+                        .eq(param.getState() != null, ArticleEntity::getState, param.getState())
+                        .eq(param.getVisible() != null, ArticleEntity::getVisible, param.getVisible())
+                        .eq(param.getRecommended() != null, ArticleEntity::getRecommended, param.getRecommended())
+                        .eq(param.getTop() != null, ArticleEntity::getTop, param.getTop())
+                        .orderByDesc(ArticleEntity::getPublishTime));
     }
 
     @Override
@@ -74,25 +84,25 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
     }
 
     @Override
-    public ArticleStatisticVisitVO statisticArticleCompile(ArticleQueryParam param) {
+    public ArticleStatisticCompileVO statisticArticleCompile(ArticleQueryParam param) {
         return null;
     }
 
     @Override
-    public ArticleStaticsResult statisticArticleVisit(LocalDateTime startTime, LocalDateTime endTime) {
-        return articleMapper.statisticArticleVisit(startTime, endTime);
+    public ArticleStatisticVisitVO statisticArticleVisit(ArticleQueryParam param) {
+        return null;
     }
 
     @Override
     public Boolean moveArticle(Long id, Long catalogId) {
         CatalogEntity catalogEntity = catalogService.getById(catalogId);
         String catalogName = catalogEntity.getCatalogName();
-        String treeRel = catalogEntity.getTreeRel();
+        String catalogEnCode = catalogEntity.getEncode();
 
         LambdaUpdateWrapper<ArticleEntity> wrapper = new LambdaUpdateWrapper<>();
         wrapper.set(ArticleEntity::getCatalogId, catalogId)
                 .set(ArticleEntity::getCatalogName, catalogName)
-                .set(ArticleEntity::getCatalogEncode, treeRel);
+                .set(ArticleEntity::getCatalogEncode, catalogEnCode);
         return update(wrapper);
     }
 
@@ -101,19 +111,5 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, ArticleEntity
         return !articleMapper.selectList(
                 Wrappers.<ArticleEntity>lambdaQuery()
                         .eq(ArticleEntity::getOriginUrl, originUrl)).isEmpty();
-    }
-
-    @Override
-    public Boolean auditArticle(ArticleAuditParam param) {
-        if(param.getAuditTime() == null){
-            param.setAuditTime(LocalDateTime.now());
-        }
-        UpdateWrapper<ArticleEntity> wrapper = new UpdateWrapper<>();
-        wrapper.lambda()
-                .set(ArticleEntity::getState, param.getState())
-                //.set(ArticleEntity::getAuditUserId, param.getAuditUserId())
-               // .set(StringUtils.hasText(param.getAuditComments()), ArticleEntity::getAuditComments, param.getAuditComments())
-                .in(ArticleEntity::getId,param.getArticleIds());
-        return update(wrapper);
     }
 }

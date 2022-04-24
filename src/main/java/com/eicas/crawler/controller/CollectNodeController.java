@@ -2,11 +2,11 @@ package com.eicas.crawler.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.eicas.cms.pojo.param.CollectNodeParam;
 import com.eicas.common.ResultData;
-import com.eicas.crawler.ArticleSpider;
+import com.eicas.crawler.webmagic.ArticleSpider;
 import com.eicas.crawler.entity.CollectNodeEntity;
 import com.eicas.crawler.service.ICollectNodeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -15,21 +15,20 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * <p>
  * 采集节点表 前端控制器
- * </p>
  *
  * @author osnudt
  * @since 2022-04-21
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/collect-node")
 public class CollectNodeController {
-
     @Resource
     ICollectNodeService collectNodeService;
     @Resource
-    ArticleSpider articleSpider;
+    private ArticleSpider spider;
+
     /**
      * 获取采集节点
      *
@@ -37,8 +36,13 @@ public class CollectNodeController {
      * @return 采集节点对象
      */
     @GetMapping(value = "/{id}")
-    public CollectNodeEntity getCollectNodeById(@NotNull @PathVariable(value = "id") Long id) {
-        return collectNodeService.getById(id);
+    public ResultData<CollectNodeEntity> getCollectNodeById(@NotNull @PathVariable(value = "id") Long id) {
+        CollectNodeEntity nodeEntity = collectNodeService.getById(id);
+        if (nodeEntity == null) {
+            return ResultData.failed("没有获取到采集节点");
+        } else {
+            return ResultData.success(nodeEntity, "成功获取采集节点");
+        }
     }
 
     /**
@@ -50,12 +54,10 @@ public class CollectNodeController {
      */
     @PostMapping(value = "/list")
     public Page<CollectNodeEntity> listCollectNode(
-            CollectNodeParam param,
             @RequestParam(value = "current", defaultValue = "1") Integer current,
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
-        return collectNodeService.listAll(param, current, size);
+        return collectNodeService.listAll(current, size);
     }
-
 
     /**
      * 保存新建采集节点
@@ -65,25 +67,23 @@ public class CollectNodeController {
      */
     @PostMapping(value = "/create")
     public ResultData<CollectNodeEntity> createCollectNode(@Valid @RequestBody CollectNodeEntity entity) {
-        if (collectNodeService.save(entity)) {
-            return ResultData.success(entity);
+        if (collectNodeService.saveCollectNode(entity) == null) {
+            return ResultData.failed("新建采集节点失败");
         }
-        return ResultData.failed("保存新建采集节点失败");
+        return ResultData.success(entity,"新建采集节点成功");
     }
 
     /**
      * 删除采集节点
-     *
      * @param id 采集节点ID
      * @return 删除是否成功
      */
     @PostMapping("/delete/{id}")
     public ResultData deleteCollectNodeById(@PathVariable(value = "id") Long id) {
-        if (!collectNodeService.removeById(id)) {
+        if (!collectNodeService.deleteCollectNodeById(id)) {
             return ResultData.failed("删除采集节点失败");
         }
         return ResultData.success("删除采集节点成功");
-
     }
 
     /**
@@ -108,22 +108,19 @@ public class CollectNodeController {
      */
     @PostMapping("/update")
     public ResultData<CollectNodeEntity> updateCollectNode(@Valid @RequestBody CollectNodeEntity entity) {
-        if (!collectNodeService.updateById(entity)) {
-            return ResultData.failed("更新采集节点信息失败");
+        if (collectNodeService.saveCollectNode(entity) == null) {
+            return ResultData.failed("更新采集节点失败");
         }
-        return ResultData.success(entity);
+        return ResultData.success(entity,"更新采集节点成功");
     }
 
     /**
      * 手动采集
-     *
-     * @param id 采集规则id
-     *
      */
     @PostMapping("/manual/{id}")
-    public ResultData<Boolean> manualCollect(@PathVariable(value = "id")Long id) {
-        CollectNodeEntity nodeEntity = collectNodeService.getById(id);
-        articleSpider.run(nodeEntity);
-        return ResultData.success(true);
+    public ResultData manualCollect(@PathVariable(value = "id") Long id) {
+
+        spider.run(id);
+        return ResultData.success("启动采集程序");
     }
 }

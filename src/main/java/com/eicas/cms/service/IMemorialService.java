@@ -6,9 +6,7 @@ import com.eicas.cms.entity.MemorialEntity;
 import com.eicas.cms.pojo.param.MemorialQueryParam;
 
 /**
- * <p>
  * 大事记表 服务类
- * </p>
  *
  * @author osnudt
  * @since 2022-04-18

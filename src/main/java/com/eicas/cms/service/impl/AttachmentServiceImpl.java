@@ -23,7 +23,6 @@ import java.io.File;
  */
 @Service
 public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, AttachmentEntity> implements IAttachmentService {
-
     @Value("${ecms.store-root-path}")
     private String storeRootPath;
     @Value("${ecms.mapping-root-path}")

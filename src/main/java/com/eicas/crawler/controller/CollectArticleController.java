@@ -3,24 +3,16 @@ package com.eicas.crawler.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.eicas.cms.entity.ArticleEntity;
-import com.eicas.cms.pojo.param.ArticleStaticsByCollect;
-import com.eicas.cms.pojo.param.DayArticleStaticsResult;
 import com.eicas.cms.service.IArticleService;
 import com.eicas.common.ResultData;
-import com.eicas.crawler.ArticleSpider;
 import com.eicas.crawler.entity.CollectArticleEntity;
-import com.eicas.crawler.entity.CollectNodeEntity;
 import com.eicas.crawler.service.ICollectArticleService;
-import com.eicas.crawler.service.ICollectNodeService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -36,7 +28,6 @@ public class CollectArticleController {
     ICollectArticleService collectArticleService;
     @Resource
     IArticleService articleService;
-
 
     /**
      * 获取单个采集文章信息
@@ -132,15 +123,4 @@ public class CollectArticleController {
         }
         return ResultData.success(true);
     }
-
-    /**
-     * 按采集规则统计文章
-     * */
-    @PostMapping(value = "/statistic")
-    public List<ArticleStaticsByCollect> staticsArticleByDays(
-            @Valid @DateTimeFormat(pattern="yyyy-MM-dd") LocalDateTime startTime,
-            @Valid @DateTimeFormat(pattern="yyyy-MM-dd") LocalDateTime endTime) {
-        return collectArticleService.statistic(startTime, endTime);
-    }
-
 }

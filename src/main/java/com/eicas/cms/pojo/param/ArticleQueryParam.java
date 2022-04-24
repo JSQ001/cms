@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 public class ArticleQueryParam {
     @ApiModelProperty(value = "所属栏目ID")
-    private Long catalogId;
+    private String catalogId;
 
     @ApiModelProperty(value = "文章标题")
     private String title;

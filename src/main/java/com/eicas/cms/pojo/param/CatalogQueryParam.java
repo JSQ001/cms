@@ -15,8 +15,8 @@ public class CatalogQueryParam {
     @ApiModelProperty(value = "所属父栏目id")
     private Long parentId;
 
-    @ApiModelProperty(value = "栏目编码")
-    private String code;
+    @ApiModelProperty(value = "栏目编码，层级关系")
+    private String encode;
 
     @ApiModelProperty(value = "栏目名称")
     private String catalogName;

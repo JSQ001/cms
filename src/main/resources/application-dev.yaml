@@ -2,7 +2,7 @@ server:
   port: 8000
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/ecms_server_new?createDatabaseIfNotExist=true&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/ecms_server_c?createDatabaseIfNotExist=true&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&allowMultiQueries=true
     username: root
     password: jsq123456
     driverClassName: com.mysql.cj.jdbc.Driver
@@ -21,14 +21,10 @@ mybatis-plus:
     　log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 ecms:
-  store-root-path: /Users/jsq/Desktop/test
-  mapping-root-path: /file
-  phantomJS: /usr/local/bin/phantomjs
-  upload: /Users/jsq/Desktop/test
-  filePrefix: http://localhost:8000/file
-
-ueditor:
-  configPath: /Users/jsq/work/code/中科/科大/ecms/config.json
+  store-root-path: d:/upload
+  mapping-root-path: /images
+  phantomJS:
+  upload: d:/upload/
 
 swagger3:
   enable: true

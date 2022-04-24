@@ -49,11 +49,11 @@ public class FileUtils {
      * @param imageUrl      图片URL
      * @param filename      图片名称
      * @param storeRootPath 图片保存根路径
-     * @param imageMapping  图片映射根路径
+     * @param mappingPath  图片映射根路径
      * @return 图片映射全路径
      */
 
-    public static String crabImage(String imageUrl, String filename, String storeRootPath, String imageMapping) {
+    public static String crabImage(String imageUrl, String filename, String storeRootPath, String mappingPath) {
         String newImageUrl;
         try {
             URL url = new URL(imageUrl);
@@ -81,7 +81,7 @@ public class FileUtils {
             while ((len = is.read(buffer)) != -1) {
                 os.write(buffer, 0, len);
             }
-            newImageUrl = imageMapping + format + "/" + newFilename;
+            newImageUrl = mappingPath + "/" + format + "/" + newFilename;
             os.close();
             is.close();
             log.debug("成功下载图片:" + newImageUrl);
@@ -113,7 +113,5 @@ public class FileUtils {
         }
         return extension;
     }
-
-
 }
 

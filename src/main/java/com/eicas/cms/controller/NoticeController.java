@@ -17,7 +17,7 @@ import java.util.List;
  * @since 2022-04-18
  */
 @RestController
-@RequestMapping("/api/notices")
+@RequestMapping("/notices")
 public class NoticeController {
 
     @Resource
@@ -39,7 +39,7 @@ public class NoticeController {
      * @return 通知公告分页数据
      */
     @PostMapping(value = "/list")
-    public Page<NoticeEntity> listNotice(NoticeQueryParam param,
+    public Page<NoticeEntity> listNotice(@Valid @RequestBody NoticeQueryParam param,
                                          @RequestParam(value = "current", defaultValue = "1") Integer current,
                                          @RequestParam(value = "size", defaultValue = "10") Integer size) {
         return noticeService.listNotice(param, current, size);

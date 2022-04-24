@@ -3,14 +3,10 @@ package com.eicas.cms.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.eicas.cms.entity.ArticleEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.eicas.cms.pojo.param.ArticleAuditParam;
 import com.eicas.cms.pojo.param.ArticleQueryParam;
-import com.eicas.cms.pojo.param.ArticleStaticsResult;
 import com.eicas.cms.pojo.vo.ArticleStatisticCompileVO;
 import com.eicas.cms.pojo.vo.ArticleStatisticVisitVO;
 import com.eicas.common.ResultData;
-
-import java.time.LocalDateTime;
 
 /**
  *
@@ -56,18 +52,17 @@ public interface IArticleService extends IService<ArticleEntity> {
 
     /**
      *
-     * @param startTime
-     * @param endTime
+     * @param param
      * @return
      */
-    ArticleStaticsResult statisticArticleVisit(LocalDateTime startTime, LocalDateTime endTime);
+    ArticleStatisticCompileVO statisticArticleCompile(ArticleQueryParam param);
 
-    /**statisticArticleVisit
+    /**
      *
      * @param param
      * @return
      */
-    ArticleStatisticVisitVO statisticArticleCompile(ArticleQueryParam param);
+    ArticleStatisticVisitVO statisticArticleVisit(ArticleQueryParam param);
 
     /**
      *
@@ -83,11 +78,4 @@ public interface IArticleService extends IService<ArticleEntity> {
      * @return 有返回真，无则返回假
      */
     Boolean hasRepetition(String originUrl);
-
-    /**
-     * 审核文章信息
-     * @param param 审核参数
-     * @return 有返回真，无则返回假
-     */
-    Boolean auditArticle(ArticleAuditParam param);
 }

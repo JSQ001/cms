@@ -11,9 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * <p>
  * 附件资源表
- * </p>
  *
  * @author osnudt
  * @since 2022-04-20

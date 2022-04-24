@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
-
 /**
  * 大事记服务实现
  *
@@ -22,7 +20,7 @@ import javax.annotation.Resource;
 @Service
 public class MemorialServiceImpl extends ServiceImpl<MemorialMapper, MemorialEntity> implements IMemorialService {
 
-    @Resource
+    @Autowired
     MemorialMapper memorialMapper;
 
     @Override
@@ -31,8 +29,10 @@ public class MemorialServiceImpl extends ServiceImpl<MemorialMapper, MemorialEnt
                 Wrappers.<MemorialEntity>lambdaQuery()
                         .ge(param.getBeginEventTime() != null,MemorialEntity::getEventTime, param.getBeginEventTime())
                         .le(param.getEndEventTime() != null,MemorialEntity::getEventTime, param.getEndEventTime())
+
                         .ge(param.getBeginPublishTime() != null, MemorialEntity::getPublishTime, param.getBeginPublishTime())
                         .ge(param.getEndPublishTime() != null, MemorialEntity::getPublishTime, param.getEndPublishTime())
+
                         .like(StringUtils.hasText(param.getTitle()), MemorialEntity::getTitle,param.getTitle())
                         .eq(param.getState() != null, MemorialEntity::getState, param.getState())
                         .orderByDesc(MemorialEntity::getEventTime));

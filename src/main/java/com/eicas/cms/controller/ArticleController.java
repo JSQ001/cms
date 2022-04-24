@@ -1,21 +1,17 @@
 package com.eicas.cms.controller;
 
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.eicas.cms.entity.ArticleEntity;
-import com.eicas.cms.pojo.param.ArticleAuditParam;
 import com.eicas.cms.pojo.param.ArticleQueryParam;
-import com.eicas.cms.pojo.param.ArticleStaticsResult;
 import com.eicas.cms.pojo.vo.ArticleStatisticCompileVO;
+import com.eicas.cms.pojo.vo.ArticleStatisticVisitVO;
 import com.eicas.cms.service.IArticleService;
 import com.eicas.common.ResultData;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -25,7 +21,7 @@ import java.util.List;
  * @since 2022-04-19
  */
 @RestController
-@RequestMapping("/api/article")
+@RequestMapping("/article")
 public class ArticleController {
     @Resource
     IArticleService articleService;
@@ -50,7 +46,7 @@ public class ArticleController {
      * @return 文章信息分页数据
      */
     @PostMapping(value = "/list")
-    public Page<ArticleEntity> listArticle(ArticleQueryParam param,
+    public Page<ArticleEntity> listArticle(@Valid @RequestBody ArticleQueryParam param,
                                            @RequestParam(value = "current", defaultValue = "1") Integer current,
                                            @RequestParam(value = "size", defaultValue = "10") Integer size) {
         return articleService.listArticle(param, current, size);
@@ -84,6 +80,7 @@ public class ArticleController {
 
     /**
      * 删除文章信息
+     *
      * @param id 文章对象ID
      * @return 删除是否成功
      */
@@ -94,6 +91,7 @@ public class ArticleController {
 
     /**
      * 批量删除文章信息
+     *
      * @param ids 文章对象ID列表
      * @return 删除是否成功
      */
@@ -109,21 +107,9 @@ public class ArticleController {
      * @return 更新是否成功
      */
     @PostMapping("/update")
-    public ResultData<ArticleEntity> updateArticle(@RequestBody ArticleEntity entity) {
+    public ResultData<ArticleEntity> updateArticle(@Valid @RequestBody ArticleEntity entity) {
         return articleService.updateArticle(entity);
     }
-
-    /**
-     * 审核文章
-     *
-     * @param param  审核参数
-     * @return 是否成功
-     */
-    @PostMapping(value = "/audit")
-    public Boolean auditArticle(@Valid @RequestBody ArticleAuditParam param) {
-        return articleService.auditArticle(param);
-    }
-
 
     /**
      * 将指定ID的文章信息移动至另一个栏目
@@ -142,16 +128,14 @@ public class ArticleController {
     /**
      * TODO 根据条件统计文章访问计数情况
      *
-     * @param startTime
-     * @param endTime
+     * @param param 查询条件
      * @return 统计数据对象
      */
     @PostMapping(value = "/statistic/visit")
-    public ArticleStaticsResult statisticArticleVisit(
-            @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") LocalDateTime startTime,
-            @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") LocalDateTime endTime) {
-        return articleService.statisticArticleVisit(startTime, endTime);
+    public ArticleStatisticVisitVO statisticArticleVisit(@Valid @RequestBody ArticleQueryParam param) {
+        return articleService.statisticArticleVisit(param);
     }
+
     /**
      * TODO 根据条件统计文章采编情况
      *
@@ -159,14 +143,13 @@ public class ArticleController {
      * @return 统计数据对象
      */
     @PostMapping(value = "/statistic/compile")
-    public ArticleStaticsResult statisticArticleCompile(
-            @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") LocalDateTime startTime,
-            @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") LocalDateTime endTime) {
-        return articleService.statisticArticleVisit(startTime, endTime);
+    public ArticleStatisticCompileVO statisticArticleCompile(@Valid @RequestBody ArticleQueryParam param) {
+        return articleService.statisticArticleCompile(param);
     }
 
     /**
      * TODO
+     *
      * @param entity
      * @return
      */
@@ -177,6 +160,7 @@ public class ArticleController {
 
     /**
      * TODO
+     *
      * @param entity
      * @return
      */

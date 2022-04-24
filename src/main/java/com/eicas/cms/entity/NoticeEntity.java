@@ -1,8 +1,10 @@
 package com.eicas.cms.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
-
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -78,7 +80,6 @@ public class NoticeEntity implements Serializable {
     /**
      * 是否显示：0-不显示，1-显示
      */
-    @TableField(property = "visible", value = "is_visible")
     private Boolean visible;
 
     /**
@@ -95,6 +96,5 @@ public class NoticeEntity implements Serializable {
      * 逻辑删除
      */
     @TableLogic
-    @TableField("is_deleted")
     private Boolean deleted;
 }
